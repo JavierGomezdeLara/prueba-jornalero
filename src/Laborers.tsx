@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react'
-import './App.scss'
+import './style/App.scss'
 import axios from 'axios'
 import React from 'react';
 import LaborerDetail from './LaborerDetail';
-import { DataProvider } from './Context';
+import { DataProvider } from './context/Context';
 
 const instance = axios.create({
   baseURL: 'http://localhost:3000/api/',
@@ -57,15 +57,24 @@ const Laborers = (): React.ReactElement => {
     }[]
   }) => {
     const roleTag = (role: string) => {
-      if (role == 'user') {
-        return <div className='tag user'>User</div>
-      } else if (role == 'admin') {
-        return <div className='tag admin'>Admin</div>
-      } else if (role == 'supervisor') {
-        return <div className='tag supervisor'>Supervisor</div>
-      } else {
-        return <div className='tag'>Unknown</div>
+
+      switch (role) {
+        case 'user':
+          return <div className='tag user'>User</div>
+
+        case 'admin':
+          return <div className='tag admin'>Admin</div>
+
+        case 'supervisor':
+          return <div className='tag supervisor'>Supervisor</div>
+
+        default:
+          return <div className='tag'>Unknown</div>
+
+
       }
+
+
     }
 
     return (
@@ -80,15 +89,15 @@ const Laborers = (): React.ReactElement => {
 
             return (
               <tr>
-                <td onClick={() => {
+                <td  onClick={() => {
                   setView({ page: 'laborer-detail', selectedLaborer: index + 1 })
-                }}>{
-                   laborer.firstName + " " + laborer.lastName
-                  }</td>
+                }}><span className='tableWrapper__name'>{
+                    laborer.firstName + " " + laborer.lastName
+                  }</span></td>
                 <td>{laborerEmail}</td>
-                                <td>{daysSinceHireDate}</td>
+                <td>{daysSinceHireDate}</td>
 
-                <td>{roleTag(laborer.role)}</td>
+                <td className={`tableWrapper__role tableWrapper__role--${laborer.role}`}>{roleTag(laborer.role)}</td>
               </tr>
             );
           })}
@@ -100,18 +109,25 @@ const Laborers = (): React.ReactElement => {
     switch (view.page) {
       case 'laborers':
         return (
-          <table>
-            <thead>
+          <>
+          <div className='tableWrapper'>
+            
+          
+          <table className='tableWrapper__workerTable'>
+            <thead className='tableWrapper__head'>
               <tr>
                 <th>Name</th>
                 <th>Email</th>
-                                <th>Days since hired</th>
-
+                <th>Days since hired</th>
                 <th>Role</th>
               </tr>
             </thead>
             <LaborersBodyTable laborers={data} />
-          </table>)
+          </table>
+
+          </div>
+          
+          </>)
       case 'laborer-detail':
         return <LaborerDetail laborer={data[view.selectedLaborer || 0].id} handleGoToLaborersPage={() => {
           setView({ page: 'laborers', selectedLaborer: -1 })
@@ -122,9 +138,9 @@ const Laborers = (): React.ReactElement => {
   return (
     <>
       <DataProvider laborer={laborer}>
-<h1 style={{ textAlign: 'center', fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>
-      Laborer CMS
-    </h1>        {!loading && Page()}
+        <h1 className='title'>
+          Laborer CMS
+        </h1>        {!loading && Page()}
       </DataProvider>
     </>
   )

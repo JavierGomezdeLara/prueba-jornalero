@@ -1,22 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useContext, } from "react";
-import { DataContext } from "./Context";
+import { DataContext } from "./context/Context";
 
 const LaborerDetail = ({ handleGoToLaborersPage }: { laborer: number, handleGoToLaborersPage: () => void }) => {
     const { laborer } = useContext(DataContext) as any
 
     const Tag = () => {
-        if (role == 'user') {
-            return <div className='tag user'>User</div>
-        } else if (role == 'admin') {
-            return <div className='tag admin'>Admin</div>
-        } else if (role == 'supervisor') {
-            return <div className='tag supervisor'>Supervisor</div>
+        switch (role) {
+            case 'user':
+                return <span className='tag user'>User</span>
+
+            case 'admin':
+                return <span className='tag admin'>Admin</span>
+
+            case 'supervisor':
+                return <span className='tag supervisor'>Supervisor</span>
         }
+
     }
 
-    const { 
+    const {
         picture,
         firstName,
         lastName,
@@ -29,27 +33,32 @@ const LaborerDetail = ({ handleGoToLaborersPage }: { laborer: number, handleGoTo
 
 
     return (
-        <div>
-            <div className="button" onClick={() => { handleGoToLaborersPage() }}>Back</div>
+        <section>
+
+            <button className="button" onClick={() => { handleGoToLaborersPage() }}>Back</button>
             <div className="laborer">
-                <div className='laborerDetailGroup'>
-                    <div><div>Name:</div><div>{firstName}</div></div>
-                    <div><div>Last name:</div><div>{lastName}</div></div>
-                    <div><div>Email:</div><div>{email}</div></div>
+
+                <div className="laborer__card">
+                    <figure className='imageWrapper'><img src={picture} width={'250px'} height={'250px'} /></figure>
+                    <div className='laborerDetailGroup'>
+                        <div>
+                            <p><span className="laborer__detailsTitle">Name:</span> {firstName}</p>
+                            <p><span className="laborer__detailsTitle">Last name:</span> {lastName}</p>
+                        </div>
+
+                        <p><span className="laborer__detailsTitle">Email:</span> {email}</p>
+                 
+                        <p><span className="laborer__detailsTitle">Hire date:</span> {dateOfHire}</p>
+                    
+                        <p><span className="laborer__detailsTitle">Role:</span> {Tag()}</p>
+                    </div>
+                    {/* <div className='laborerDetailGroup'></div> */}
                 </div>
-                
-                <div className='laborerDetailGroup'>
-                    <div><div>Hire date:</div><div>{dateOfHire}</div></div>
-                </div>
-                <div className='laborerDetailGroup'>
-                    <div><div>Role:</div><div>{Tag()}</div></div>
-                </div>
-                {/* <div className='laborerDetailGroup'></div> */}
-        <div className='imageWrapper'><img src={picture} width={'250px'} height={'250px'} /></div>
+
 
             </div>
 
-        </div>
+        </section>
     )
 }
 

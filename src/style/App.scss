@@ -1,0 +1,177 @@
+body{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+
+
+}
+
+
+.title {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0 0 1.25rem 0;
+    font-size: 2.2rem;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.tableWrapper {
+    overflow-x: auto;
+    border: 1px solid #000000;
+    border-radius: 1rem;
+    margin: 3rem;
+    font-family: Arial, Helvetica, sans-serif;
+    
+    @media screen and (max-width:768px) {
+            margin: 1rem;
+    }
+
+}
+
+.tableWrapper__workerTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+
+    th,
+    td {
+        padding: 1rem;
+        text-align: center;
+        border: 1px solid black;
+    
+    }
+
+
+
+}
+
+
+.tableWrapper__head {
+
+    background-color: #BBE4E9;
+    font-size: 1.3rem;
+}
+
+.tableWrapper__role{
+
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+
+}
+
+
+.tableWrapper__role--user {
+    background-color: #53de4477;
+}
+
+.tableWrapper__role--admin {
+    background-color: #ebdb2568;
+}
+
+.tableWrapper__role--supervisor {
+    background-color: #e9373774;
+}
+
+
+.tableWrapper__name{
+    cursor: pointer;
+    color: #0246f4;
+    text-decoration: underline;
+    transition: color .2s;
+}
+
+.tableWrapper__name:hover{
+    color: #386ef9;
+
+}
+
+
+
+
+
+
+//End of table css
+
+
+
+
+
+//Start of card
+.laborer__card {
+
+    display: flex;
+    align-items: center;
+    border: .125rem solid black;
+    width: auto;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    border-radius: .5rem;
+    padding: 2rem;
+    background-color: rgba(176, 224, 230, 0.862);
+    box-shadow: 1rem 1.6rem .3125rem black;
+
+    @media screen and (max-width:768px) {
+        justify-content: center;
+        padding: 1rem 0;
+        box-shadow: none;
+    }
+
+}
+
+.laborer {
+    display: flex;
+    justify-content: center;
+    margin: 1rem 0;
+}
+
+.laborerDetailGroup {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 1.2rem;
+    flex-direction: column;
+}
+
+.laborer__detailsTitle {
+    font-weight: 600;
+    font-size: 1.5rem;
+    text-decoration: underline;
+}
+
+.button {
+    background-color: #dd0000;
+    color: white;
+    padding: .625rem 1.5rem;
+    display: inline-block;
+    margin: .25rem .125rem;
+    border: 2px solid rgba(0, 0, 0, 0.8);
+    border-radius: 0.5em;
+    transition: background-color 0.2s;
+    cursor: pointer;
+
+}
+
+.button:hover {
+    background-color: #f67575;
+}
+
+.tag {
+    padding: .3rem .6rem;
+    border-radius: 1rem;
+}
+
+
+
+
+.imageWrapper {
+    margin: 1rem;
+}
+
+
+img {
+
+    height: 18.75rem;
+    width: 100%;
+    object-fit: contain;
+    border-radius: 1rem;
+}
