@@ -1,22 +1,28 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useContext, } from "react";
+import { useContext, useState, } from "react";
 import { DataContext } from "./context/Context";
 
-const LaborerDetail = ({ handleGoToLaborersPage }: { laborer: number, handleGoToLaborersPage: () => void }) => {
-    const { laborer } = useContext(DataContext) as any
+    interface Laborer {
+        picture: string;
+        firstName: string;
+        lastName: string;
+        email: string;
+        role: 'user' | 'admin' | 'supervisor';
+        hireDate: string;
+    }
 
-    const Tag = () => {
-        switch (role) {
-            case 'user':
-                return <span className='tag user'>User</span>
 
-            case 'admin':
-                return <span className='tag admin'>Admin</span>
 
-            case 'supervisor':
-                return <span className='tag supervisor'>Supervisor</span>
-        }
+const LaborerDetail = ({ handleGoToLaborersPage }: { handleGoToLaborersPage: () => void }) => {
+
+    const { laborer } = useContext(DataContext) as { laborer: Laborer };
+
+
+
+    if (!laborer) {
+
+        return <pre>Error 404 Laborer not found</pre>
 
     }
 
@@ -27,7 +33,10 @@ const LaborerDetail = ({ handleGoToLaborersPage }: { laborer: number, handleGoTo
         email,
         role,
         hireDate,
-    } = laborer as any || {}
+    } = laborer;
+
+
+
 
     const dateOfHire = hireDate ? hireDate.substring(0, 10) : 'Unknown';
 
@@ -39,20 +48,21 @@ const LaborerDetail = ({ handleGoToLaborersPage }: { laborer: number, handleGoTo
             <div className="laborer">
 
                 <div className="laborer__card">
-                    <figure className='imageWrapper'><img src={picture} width={'250px'} height={'250px'} /></figure>
-                    <div className='laborerDetailGroup'>
+                    <figure className='laborer__imageWrapper'>
+                        <img src={picture} className="laborer__image" alt={`${firstName} ${lastName} profile photo`} />
+                    </figure>
+                    <div className='laborer__laborerDetailGroup'>
                         <div>
                             <p><span className="laborer__detailsTitle">Name:</span> {firstName}</p>
                             <p><span className="laborer__detailsTitle">Last name:</span> {lastName}</p>
                         </div>
 
                         <p><span className="laborer__detailsTitle">Email:</span> {email}</p>
-                 
+
                         <p><span className="laborer__detailsTitle">Hire date:</span> {dateOfHire}</p>
-                    
-                        <p><span className="laborer__detailsTitle">Role:</span> {Tag()}</p>
+
+                        <p><span className="laborer__detailsTitle">Role:</span><span className={'tag ' + role}>{role}</span></p>
                     </div>
-                    {/* <div className='laborerDetailGroup'></div> */}
                 </div>
 
 

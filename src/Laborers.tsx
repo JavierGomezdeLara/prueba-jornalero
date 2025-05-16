@@ -11,9 +11,22 @@ const instance = axios.create({
   timeout: 1000,
 });
 
+
+    interface Laborer {
+        picture: string;
+        firstName: string;
+        lastName: string;
+        email: string;
+        role: 'user' | 'admin' | 'supervisor';
+        hireDate: string;
+    }
+
 const Laborers = (): React.ReactElement => {
-  const [data, setData] = useState<any>([])
-  const [laborer, setLaborer] = useState<any>({})
+
+
+  const [data, setData] = useState<Laborer[]>([])
+  const [laborer, setLaborer] = useState<Laborer>();
+
   const [view, setView] = useState({ page: 'laborers', selectedLaborer: -1 })
   const [loading, setLoading] = useState(false)
 
@@ -39,7 +52,7 @@ const Laborers = (): React.ReactElement => {
 
     if (view.page == 'laborer-detail') {
       const newData = laborerfetchData();
-      setLaborer(newData)
+      setLaborer(newData);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [view.page])

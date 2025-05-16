@@ -125,7 +125,7 @@ body{
     margin: 1rem 0;
 }
 
-.laborerDetailGroup {
+.laborer__laborerDetailGroup {
     display: flex;
     gap: 0.5rem;
     font-size: 1.2rem;
@@ -163,12 +163,16 @@ body{
 
 
 
-.imageWrapper {
+.laborer__imageWrapper {
     margin: 1rem;
+
+    @media screen and (max-width:768px) {
+        width: 100%;
+    }
 }
 
 
-img {
+.laborer__image {
 
     height: 18.75rem;
     width: 100%;
