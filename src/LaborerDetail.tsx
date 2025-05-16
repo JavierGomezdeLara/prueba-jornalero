@@ -2,16 +2,7 @@
 
 import { useContext, useState, } from "react";
 import { DataContext } from "./context/Context";
-
-    interface Laborer {
-        picture: string;
-        firstName: string;
-        lastName: string;
-        email: string;
-        role: 'user' | 'admin' | 'supervisor';
-        hireDate: string;
-    }
-
+import { Laborer } from './types';
 
 
 const LaborerDetail = ({ handleGoToLaborersPage }: { handleGoToLaborersPage: () => void }) => {
