@@ -1,4 +1,4 @@
-body{
+body {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
@@ -16,15 +16,41 @@ body{
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
+.createWrapper {
+    display: flex;
+    margin: 1rem;
+
+    @media screen and (max-width:768px) {
+        justify-content: center;
+    }
+}
+
+.createWrapper__create {
+    background-color: #28a745;
+    padding: 0.6em;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    color: white;
+    transition: background-color .4s;
+    border: 2px solid black;
+}
+
+.createWrapper__create:hover {
+    background-color: #2fbb50;
+
+}
+
 .tableWrapper {
+    display: flex;
+    flex-direction: column;
     overflow-x: auto;
     border: 1px solid #000000;
     border-radius: 1rem;
     margin: 3rem;
     font-family: Arial, Helvetica, sans-serif;
-    
+
     @media screen and (max-width:768px) {
-            margin: 1rem;
+        margin: 1rem;
     }
 
 }
@@ -40,7 +66,7 @@ body{
         padding: 1rem;
         text-align: center;
         border: 1px solid black;
-    
+
     }
 
 
@@ -54,7 +80,7 @@ body{
     font-size: 1.3rem;
 }
 
-.tableWrapper__role{
+.tableWrapper__role {
 
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 
@@ -74,14 +100,14 @@ body{
 }
 
 
-.tableWrapper__name{
+.tableWrapper__name {
     cursor: pointer;
     color: #0246f4;
     text-decoration: underline;
     transition: color .2s;
 }
 
-.tableWrapper__name:hover{
+.tableWrapper__name:hover {
     color: #386ef9;
 
 }
@@ -143,17 +169,29 @@ body{
     color: white;
     padding: .625rem 1.5rem;
     display: inline-block;
-    margin: .25rem .125rem;
     border: 2px solid rgba(0, 0, 0, 0.8);
     border-radius: 0.5em;
     transition: background-color 0.2s;
     cursor: pointer;
+    margin: 1rem;
+
+    @media screen and (max-width: 768px) {
+        padding: 0.5rem 1rem;
+        margin: 0.5rem 0;
+
+    }
 
 }
 
 .button:hover {
     background-color: #f67575;
 }
+
+.button:focus {
+    outline: 3px solid #ffaaaa;
+    outline-offset: 2px;
+}
+
 
 .tag {
     padding: .3rem .6rem;
@@ -179,3 +217,83 @@ body{
     object-fit: contain;
     border-radius: 1rem;
 }
+
+//End of card
+
+
+
+
+//Start of create laborer
+
+
+.newLaborer__form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+
+.newLaborer__formGroup {
+    display: flex;
+    align-items: center;
+    margin: 2rem 0;
+}
+
+
+.newLaborer__formGroup label {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0 1rem 0 0;
+}
+
+.newLaborer__formGroup input {
+    border: 1px solid black;
+    padding: 0.3rem 0.8rem;
+    border-radius: 1rem;
+}
+
+.newLaborer__formGroup select {
+    border: 1px solid black;
+    padding: 0.3rem 0.8rem;
+    border-radius: 1rem;
+    font-family: inherit;
+}
+
+.newLaborer__formWrapper {
+    padding: 1rem;
+    border: 1px solid black;
+    border-radius: 1rem;
+    box-shadow: #000000 0.8rem 0.8rem 0.5rem;
+
+}
+
+
+.newLaborer__submitWrapper{
+    display: flex;
+    justify-content: space-between  ;
+}
+
+
+
+.newLaborer__create {
+
+  background-color: rgb(3, 209, 3);
+  padding: 0.8em 1.5em;
+  border-radius: 0.5rem;
+  border: 2px solid black;
+  color: black;
+  cursor: pointer;
+  display: inline-block; 
+  text-decoration: none; 
+  color: white;
+  
+}
+
+.newLaborer__create--back {
+  background-color: rgb(209, 3, 3);
+  padding: 0.6em 1.5em;
+  display: inline-block; 
+  text-decoration: none; 
+}
+

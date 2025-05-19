@@ -1,5 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { Laborer } from '../models/laborer';
+import { v4 as uuidv4 } from 'uuid';
+import { Sequelize } from 'sequelize';
 
 const router = Router();
 
@@ -148,12 +150,30 @@ router.get('/laborers/:id', async (req: Request, res: Response) => {
  */
 
 router.post('/laborers', async (req: Request, res: Response) => {
+
   try {
-    const laborer = await Laborer.create(req.body);
+    const laborerData = {
+      ...req.body,
+      id: uuidv4(),
+    };
+
+    const laborer = await Laborer.create(laborerData);
     res.status(201).json(laborer);
   } catch (error) {
-    res.status(400).json({ error: 'Error creating laborer' });
+    res.status(400).json({ error });
   }
+
+  // try {
+
+  //   const laborer = await Laborer.create(req.body);
+  //   res.status(201).json(laborer);
+  // } catch (error) {
+  //   res.status(400).json({error: error})
+  
+  // }
+
+
+
 });
 
 /**
@@ -185,20 +205,23 @@ router.post('/laborers', async (req: Request, res: Response) => {
  *         description: Laborer not found
  */
 
-router.put('/laborers/:id', async (req: Request, res: Response) => {
+router.post('/laborers', async (req: Request, res: Response) => {
   try {
-    const [updated] = await Laborer.update(req.body, {
-      where: { id: req.params.id }
-    });
-    if (updated) {
-      const updatedLaborer = await Laborer.findByPk(req.params.id);
-      res.json(updatedLaborer);
-    } else {
-      res.status(404).json({ error: 'Laborer not found' });
+    const laborer = await Laborer.create(req.body);
+    res.status(201).json(laborer);
+  } catch (error: any) {
+    if (error?.name === 'SequelizeUniqueConstraintError') {
+
+      const message = error.errors?.[0]?.message || 'Email must be unique';
+      return res.status(400).json({ error: message });
+    
     }
-  } catch (error) {
-    res.status(400).json({ error: 'Error updating laborer' });
+
+    console.error('Unexpected error creating laborer:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+
 
 export default router;

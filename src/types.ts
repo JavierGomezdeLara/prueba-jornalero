@@ -1,4 +1,5 @@
 export interface Laborer {
+        id: number;
         picture: string;
         firstName: string;
         lastName: string;
