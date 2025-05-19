@@ -15,49 +15,58 @@ const CreateLaborer = () => {
         email: '',
         role: 'user',
         hireDate: '',
-        picture: '',
     });
+    const [picture, setPicture] = useState<File | null>(null);
     const [error, setError] = useState<string | null>(null);
-
 
     const navigate = useNavigate();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            setPicture(e.target.files[0]);
+        }
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
         setError(null);
 
-        await instance.post('laborers', formData);
-        navigate('/');
-    } catch (err: any) {
-        if (err.response && err.response.data && err.response.data.error) {
-
-            //This is to find the error message from the response of the server
-            console.log(err.response.data.error.errors[0].message);
-
-            setError(err.response.data.error.errors[0].message); 
-        } else {
-            console.log(err);
-            
-            setError('Unexpected error occurred');
+        const data = new FormData();
+        for (const key in formData) {
+            data.append(key, (formData as any)[key]);
         }
-    }
-};
+        if (picture) {
+            data.append('picture', picture);
+        }
+
+        try {
+            await instance.post('laborers', data, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            navigate('/');
+        } catch (err: any) {
+            if (err.response?.data?.error) {
+                console.log(err.response.data.error);
+                setError(err.response.data.error);
+            } else {
+                console.error(err);
+                setError('Unexpected error occurred');
+            }
+        }
+    };
 
     return (
         <div className='newLaborer'>
             <h2 className='title'>Create a New Laborer</h2>
-            <form onSubmit={handleSubmit} className="newLaborer__form">
-
+            <form onSubmit={handleSubmit} className="newLaborer__form" encType="multipart/form-data">
                 <div className='newLaborer__formWrapper'>
-
-
-
-
                     <div className='newLaborer__formGroup'>
                         <label htmlFor="fname">First Name:</label>
                         <input
@@ -96,13 +105,13 @@ const CreateLaborer = () => {
                     </div>
 
                     <div className='newLaborer__formGroup'>
-                        <label htmlFor="picture">Picture URL:</label>
+                        <label htmlFor="picture">Picture:</label>
                         <input
                             id="picture"
                             name="picture"
-                            placeholder="Picture URL"
-                            value={formData.picture}
-                            onChange={handleChange}
+                            type="file"
+                            accept="image/*"
+                            onChange={handleFileChange}
                         />
                     </div>
 
@@ -131,6 +140,7 @@ const CreateLaborer = () => {
                             <option value="admin">Admin</option>
                         </select>
                     </div>
+
                     {error && <p style={{ color: 'red', marginTop: '1rem' }}>{error}</p>}
 
                     <div className='newLaborer__submitWrapper'>
@@ -140,8 +150,6 @@ const CreateLaborer = () => {
                 </div>
             </form>
         </div>
-
-
     );
 };
 

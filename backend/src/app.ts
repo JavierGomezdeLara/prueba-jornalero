@@ -4,6 +4,7 @@ import setupSwagger from './swagger';
 import { Laborer } from './models/laborer';
 import initializeLaborers from './models/seed';
 import laborerRoutes from './routes/laborerRoutes';
+import path from 'path';
 
 const app = express();
 const port = 3000;
@@ -16,7 +17,7 @@ app.use(cors({
 app.use(express.json());
 
 app.use('/api', laborerRoutes);
-
+app.use('/assets', express.static(path.join(__dirname, 'assets')));
 setupSwagger(app);
 
 const startServer = async () => {

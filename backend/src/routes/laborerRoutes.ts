@@ -1,7 +1,27 @@
 import { Router, Request, Response } from 'express';
 import { Laborer } from '../models/laborer';
 import { v4 as uuidv4 } from 'uuid';
-import { Sequelize } from 'sequelize';
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+
+// Asegúrate de que el directorio exista
+const imageDir = path.join(__dirname, '../assets/');
+if (!fs.existsSync(imageDir)) {
+  fs.mkdirSync(imageDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, '../assets'));
+  },
+  filename: (req, file, cb) => {
+    const uniqueName = uuidv4() + path.extname(file.originalname);
+    cb(null, uniqueName);
+  },
+});
+
+const upload = multer({ storage });
 
 const router = Router();
 
@@ -148,33 +168,47 @@ router.get('/laborers/:id', async (req: Request, res: Response) => {
  *             schema:
  *               $ref: '#/components/schemas/Laborer'
  */
-
-router.post('/laborers', async (req: Request, res: Response) => {
-
+router.post('/laborers', upload.single('picture'), async (req: Request, res: Response) => {
   try {
-    const laborerData = {
-      ...req.body,
-      id: uuidv4(),
-    };
+    const id = uuidv4();
+    const { firstName, lastName, email, role, hireDate } = req.body;
 
-    const laborer = await Laborer.create(laborerData);
+    const picturePath = req.file ? ` /backend/src/assets/${req.file.filename}` : '';
+
+    const laborer = await Laborer.create({
+      id,
+      firstName,
+      lastName,
+      email,
+      role,
+      hireDate,
+      picture: picturePath,
+    });
+
     res.status(201).json(laborer);
-  } catch (error) {
-    res.status(400).json({ error });
+  } catch (error: any) {
+    if (error?.name === 'SequelizeUniqueConstraintError') {
+      const message = error.errors?.[0]?.message || 'Email must be unique';
+      return res.status(400).json({ error: message });
+    }
+
+    console.error('Unexpected error creating laborer:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
-
-  // try {
-
-  //   const laborer = await Laborer.create(req.body);
-  //   res.status(201).json(laborer);
-  // } catch (error) {
-  //   res.status(400).json({error: error})
-  
-  // }
-
-
-
 });
+
+// try {
+
+//   const laborer = await Laborer.create(req.body);
+//   res.status(201).json(laborer);
+// } catch (error) {
+//   res.status(400).json({error: error})
+
+// }
+
+
+
+
 
 /**
  * @swagger
@@ -205,23 +239,23 @@ router.post('/laborers', async (req: Request, res: Response) => {
  *         description: Laborer not found
  */
 
-router.post('/laborers', async (req: Request, res: Response) => {
+router.put('/laborers/:id', async (req: Request, res: Response) => {
+
+
+
   try {
-    const laborer = await Laborer.create(req.body);
-    res.status(201).json(laborer);
-  } catch (error: any) {
-    if (error?.name === 'SequelizeUniqueConstraintError') {
-
-      const message = error.errors?.[0]?.message || 'Email must be unique';
-      return res.status(400).json({ error: message });
-    
+    const [updated] = await Laborer.update(req.body, {
+      where: { id: req.params.id }
+    });
+    if (updated) {
+      const updatedLaborer = await Laborer.findByPk(req.params.id);
+      res.json(updatedLaborer);
+    } else {
+      res.status(404).json({ error: 'Laborer not found' });
     }
-
-    console.error('Unexpected error creating laborer:', error);
-    res.status(500).json({ error: 'Internal server error' });
+  } catch (error) {
+    res.status(400).json({ error: 'Error updating laborer' });
   }
 });
-
-
 
 export default router;
