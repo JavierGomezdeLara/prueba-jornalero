@@ -5,11 +5,17 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 
-// Asegúrate de que el directorio exista
+//Here we prepare multer so we can deal with uploading new photos to the assets folder
+
 const imageDir = path.join(__dirname, '../assets/');
+
+// We prepare it to make a directory if it doesnt exists
+
 if (!fs.existsSync(imageDir)) {
   fs.mkdirSync(imageDir, { recursive: true });
 }
+
+// And here we select how the file will be named and where will be stored.
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -102,6 +108,10 @@ const router = Router();
  *                     description: Laborer's role
  */
 
+
+
+//Get all the laborers
+
 router.get('/laborers', async (req: Request, res: Response) => {
   try {
     const laborers = await Laborer.findAll({
@@ -136,6 +146,8 @@ router.get('/laborers', async (req: Request, res: Response) => {
  *         description: Laborer not found
  */
 
+//Get laborer by id
+
 router.get('/laborers/:id', async (req: Request, res: Response) => {
   try {
     const laborer = await Laborer.findByPk(req.params.id);
@@ -168,13 +180,20 @@ router.get('/laborers/:id', async (req: Request, res: Response) => {
  *             schema:
  *               $ref: '#/components/schemas/Laborer'
  */
+
+  //Upload a new laborer, we use uuidv4 so it can create a new id that doesnt already exists
+
 router.post('/laborers', upload.single('picture'), async (req: Request, res: Response) => {
   try {
     const id = uuidv4();
     const { firstName, lastName, email, role, hireDate } = req.body;
+  
+    //We deal with the file, writting the path we want for our image
 
     const picturePath = req.file ? ` /backend/src/assets/${req.file.filename}` : '';
 
+    //Here, we check if the email already exists. If it does, we send an error message or if something else happens
+    //if everything is okay, we continue and send an okay response
     const laborer = await Laborer.create({
       id,
       firstName,
@@ -187,6 +206,9 @@ router.post('/laborers', upload.single('picture'), async (req: Request, res: Res
 
     res.status(201).json(laborer);
   } catch (error: any) {
+
+    
+    
     if (error?.name === 'SequelizeUniqueConstraintError') {
       const message = error.errors?.[0]?.message || 'Email must be unique';
       return res.status(400).json({ error: message });
@@ -239,23 +261,60 @@ router.post('/laborers', upload.single('picture'), async (req: Request, res: Res
  *         description: Laborer not found
  */
 
-router.put('/laborers/:id', async (req: Request, res: Response) => {
 
+//Edit Laborer
 
-
+router.put('/laborers/:id', upload.single('picture'), async (req: Request, res: Response) => {
+  //We try to find the laborer by id first
   try {
-    const [updated] = await Laborer.update(req.body, {
-      where: { id: req.params.id }
-    });
-    if (updated) {
-      const updatedLaborer = await Laborer.findByPk(req.params.id);
-      res.json(updatedLaborer);
-    } else {
-      res.status(404).json({ error: 'Laborer not found' });
+    const { firstName, lastName, email, role, hireDate } = req.body;
+    const laborer = await Laborer.findByPk(req.params.id);
+    console.log(req.params);
+
+  //if not we send an error
+    
+    if (!laborer) {
+      return res.status(404).json({ error: 'Laborer not found' });
     }
-  } catch (error) {
-    res.status(400).json({ error: 'Error updating laborer' });
+  
+  //We treat the image and give it the path we desire
+
+    let picturePath = laborer.picture;
+    if (req.file) {
+      picturePath = `/backend/src/assets/${req.file.filename}`;
+
+  //Here we overwrite the already existing image
+
+      const prevImagePath = path.join(__dirname, `../${laborer.picture}`);
+      if (fs.existsSync(prevImagePath) && laborer.picture.startsWith('/assets/')) {
+        fs.unlink(prevImagePath, err => {
+          if (err) console.warn('Error deleting old image:', err);
+        });
+      }
+    }
+
+    await laborer.update({
+      firstName,
+      lastName,
+      email,
+      role,
+      hireDate,
+      picture: picturePath
+    });
+
+    //Here, we check if the email already exists. If it does, we send an error message or if something else happens
+    //if everything is okay, we continue and send an okay response
+    res.json(laborer);
+  } catch (error: any) {
+    if (error?.name === 'SequelizeUniqueConstraintError') {
+      const message = error.errors?.[0]?.message || 'Email must be unique';
+      return res.status(400).json({ error: message });
+    }
+
+    console.error('Error updating laborer:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 export default router;

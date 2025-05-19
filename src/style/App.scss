@@ -27,7 +27,7 @@ body {
 
 .createWrapper__create {
     background-color: #28a745;
-    padding: 0.6em;
+    padding: 0.6rem;
     border-radius: 0.5rem;
     text-decoration: none;
     color: white;
@@ -112,9 +112,21 @@ body {
 
 }
 
+.tableWrapper__editButton{
+    background-color: #294eac;
+    color: white;
+    padding: 0.6rem 1.5rem;
+    border: 2px solid black;
+    border-radius: 1rem ;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
 
+.tableWrapper__editButton:hover{
 
+    background-color: #3f75ff;
 
+}
 
 
 //End of table css
@@ -287,12 +299,12 @@ body {
   display: inline-block; 
   text-decoration: none; 
   color: white;
-  
+
 }
 
 .newLaborer__create--back {
   background-color: rgb(209, 3, 3);
-  padding: 0.6em 1.5em;
+  padding: 0.6rem 1.5em;
   display: inline-block; 
   text-decoration: none; 
 }

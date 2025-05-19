@@ -7,6 +7,8 @@ interface Props {
 
 function LaborerDetail({ laborer, handleGoToLaborersPage }: Props) {
 
+  //Here we check if they pass down a correct id or not. If not, it shows an error message
+
   if (typeof laborer === 'number') {
     return (
       <section>
@@ -25,6 +27,8 @@ function LaborerDetail({ laborer, handleGoToLaborersPage }: Props) {
     role,
     hireDate,
   } = laborer;
+
+  // Format the date
 
   const dateOfHire = hireDate ? hireDate.substring(0, 10) : 'Unknown';
 

@@ -13,10 +13,16 @@ const instance = axios.create({
 });
 
 const Laborers = (): React.ReactElement => {
+
+  // States: we define Laborers with the type, and set the view to change the components
+
   const [data, setData] = useState<Laborer[]>([]);
   const [laborer, setLaborer] = useState<Laborer | null>(null);
   const [view, setView] = useState({ page: 'laborers', selectedLaborer: -1 });
   const [loading, setLoading] = useState(false);
+
+  // we define the useEffects to fetch the data depending on the value of the view 
+
 
   useEffect(() => {
     setLoading(true);
@@ -52,6 +58,8 @@ const Laborers = (): React.ReactElement => {
     }
   };
 
+  //Here we reach the table body, that we separate from the rest of the table for more comfort
+
   const LaborersBodyTable = React.memo(({ laborers }: { laborers: Laborer[] }) => {
     return (
       <tbody>
@@ -75,12 +83,19 @@ const Laborers = (): React.ReactElement => {
               <td className={`tableWrapper__role tableWrapper__role--${laborer.role}`}>
                 <span className={'tag ' + laborer.role}>{laborer.role}</span>
               </td>
+              <td >
+                <Link to={"/editLaborer/"+laborer.id} className='tableWrapper__editButton'> Edit </Link>
+
+
+              </td>
             </tr>
           );
         })}
       </tbody>
     );
   });
+
+    //Here we make the rest of the table OR change the component we load
 
   const Page = () => {
     switch (view.page) {
@@ -101,6 +116,7 @@ const Laborers = (): React.ReactElement => {
                   <th>Email</th>
                   <th>Days since hired</th>
                   <th>Role</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <LaborersBodyTable laborers={data} />

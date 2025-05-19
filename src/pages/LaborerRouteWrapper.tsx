@@ -9,10 +9,14 @@ const instance = axios.create({
   timeout: 1000,
 });
 
+//This is a middleware so we can separate the logic of requesting a certain laborer
+
 const LaborerRouteWrapper = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [laborer, setLaborer] = useState<Laborer | null>(null);
+
+  //We make a call to the API to get a certain laborer
 
   useEffect(() => {
     const fetchLaborer = async () => {
@@ -28,6 +32,8 @@ const LaborerRouteWrapper = () => {
   }, [id]);
 
   if (!laborer) return <p>Loading...</p>;
+
+  //And if it exists we pass it down with props to another component
 
   return <LaborerDetail laborer={laborer} handleGoToLaborersPage={() => navigate('/')} />;
 };

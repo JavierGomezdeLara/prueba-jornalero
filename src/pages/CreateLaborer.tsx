@@ -9,6 +9,10 @@ const instance = axios.create({
 });
 
 const CreateLaborer = () => {
+
+    //States: we create the usestate for the laborer and picture, and the error that triggers
+    // when the user introduces an email that already exists
+
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -21,6 +25,8 @@ const CreateLaborer = () => {
 
     const navigate = useNavigate();
 
+    //Functions for handling the change of the inputs AND the one for the picture
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
@@ -31,6 +37,10 @@ const CreateLaborer = () => {
             setPicture(e.target.files[0]);
         }
     };
+
+
+    // Handle the submit, we create a formData and we append the image so it can be sent
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -44,8 +54,13 @@ const CreateLaborer = () => {
             data.append('picture', picture);
         }
 
+        //Calling the backend, if all goes well, it sends us back to the start
+        // if not it shows the error by storing it on the state
+
         try {
             await instance.post('laborers', data, {
+                
+                //The headers here is because we send an image
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
