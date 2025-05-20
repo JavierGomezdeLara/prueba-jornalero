@@ -251,12 +251,20 @@ body {
     display: flex;
     align-items: center;
     margin: 2rem 0;
+    display: flex;
+    @media screen and (max-width: 768px) {
+    flex-direction: column  ;
+        
+    }
 }
 
 
 .newLaborer__formGroup label {
     font-family: Arial, Helvetica, sans-serif;
     margin: 0 1rem 0 0;
+        @media screen and (max-width: 768px) {
+       margin: 0 1rem 1.5rem 0; 
+    }
 }
 
 .newLaborer__formGroup input {
@@ -277,6 +285,8 @@ body {
     border: 1px solid black;
     border-radius: 1rem;
     box-shadow: #000000 0.8rem 0.8rem 0.5rem;
+
+
 
 }
 
